@@ -260,5 +260,63 @@ namespace Honey.Tests
                 var result = money1 <= money2;
             });
         }
+
+        private static decimal[][] _additions = 
+        {
+            new [] {1m, 2m, 3m},
+            new [] {1m, 0m, 1m},
+            new [] {-1m, -2m, -3m},
+            new [] {-1m, 1m, 0m}
+        };
+        [TestCaseSource(nameof(_additions))]
+        public void Addition_ReturnsSumOfAmounts(decimal amount1, decimal amount2, decimal expectedResult)
+        {
+            var money1 = new Money(amount1, new Currency("USD"));
+            var money2 = new Money(amount2, new Currency("USD"));
+            
+            Assert.AreEqual(expectedResult, (money1 + money2).Amount);
+            Assert.AreEqual(money1.Currency, (money1 + money2).Currency);
+        }
+        
+        private static decimal[][] _subtractions = 
+        {
+            new [] {1m, 2m, -1m},
+            new [] {1m, 0m, 1m},
+            new [] {-1m, -2m, 1m},
+            new [] {-1m, 1m, -2m}
+        };
+        [TestCaseSource(nameof(_subtractions))]
+        public void Subtraction_ReturnsDifferenceOfAmounts(decimal amount1, decimal amount2, decimal expectedResult)
+        {
+            var money1 = new Money(amount1, new Currency("USD"));
+            var money2 = new Money(amount2, new Currency("USD"));
+            
+            Assert.AreEqual(expectedResult, (money1 - money2).Amount);
+            Assert.AreEqual(money1.Currency, (money1 - money2).Currency);
+        }
+        
+        [Test]
+        public void Addition_ThrowsException_WhenCurrenciesMismatched()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("EUR"));
+
+            Assert.Throws<InvalidCurrencyException>(() =>
+            {
+                var result = money1 + money2;
+            });
+        }
+        
+        [Test]
+        public void Subtraction_ThrowsException_WhenCurrenciesMismatched()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("EUR"));
+            
+            Assert.Throws<InvalidCurrencyException>(() =>
+            {
+                var result = money1 - money2;
+            });
+        }
     }
 }

@@ -62,6 +62,20 @@ namespace Honey
             
             return m1.Amount <= m2.Amount;
         }
+        
+        public static Money operator +(Money m1, Money m2)
+        {
+            CheckCurrencies(m1.Currency, m2.Currency);
+            
+            return new Money(m1.Amount + m2.Amount, m1.Currency);
+        }
+        
+        public static Money operator -(Money m1, Money m2)
+        {
+            CheckCurrencies(m1.Currency, m2.Currency);
+            
+            return new Money(m1.Amount - m2.Amount, m1.Currency);
+        }
 
         private static void CheckCurrencies(Currency expected, Currency actual)
         {
