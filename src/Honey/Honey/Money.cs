@@ -48,6 +48,20 @@ namespace Honey
             
             return m1.Amount < m2.Amount;
         }
+        
+        public static bool operator >=(Money m1, Money m2)
+        {
+            CheckCurrencies(m1.Currency, m2.Currency);
+
+            return m1.Amount >= m2.Amount;
+        }
+        
+        public static bool operator <=(Money m1, Money m2)
+        {
+            CheckCurrencies(m1.Currency, m2.Currency);
+            
+            return m1.Amount <= m2.Amount;
+        }
 
         private static void CheckCurrencies(Currency expected, Currency actual)
         {

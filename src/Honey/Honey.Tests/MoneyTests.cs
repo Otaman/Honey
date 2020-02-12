@@ -182,5 +182,83 @@ namespace Honey.Tests
                 var result = money1 < money2;
             });
         }
+        
+        [Test]
+        public void GreaterOrEqualThan_ReturnsTrue_WhenAmountIsGreater()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsTrue(money1 >= money2);
+        }
+        
+        [Test]
+        public void GreaterOrEqualThan_ReturnsTrue_WhenAmountIsTheSame()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsTrue(money1 >= money2);
+        }
+        
+        [Test]
+        public void GreaterOrEqualThan_ReturnsFalse_WhenAmountIsLess()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("USD"));
+            
+            Assert.IsFalse(money1 >= money2);
+        }
+        
+        [Test]
+        public void LessOrEqualThan_ReturnsTrue_WhenAmountIsLess()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("USD"));
+            
+            Assert.IsTrue(money1 <= money2);
+        }
+        
+        [Test]
+        public void LessOrEqualThan_ReturnsTrue_WhenAmountIsTheSame()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsTrue(money1 <= money2);
+        }
+        
+        [Test]
+        public void LessOrEqualThan_ReturnsFalse_WhenAmountIsGreater()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsFalse(money1 <= money2);
+        }
+        
+        [Test]
+        public void GreaterOrEqualThan_ThrowsException_WhenCurrenciesMismatched()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("EUR"));
+
+            Assert.Throws<InvalidCurrencyException>(() =>
+            {
+                var result = money1 >= money2;
+            });
+        }
+        
+        [Test]
+        public void LessOrEqualThan_ThrowsException_WhenCurrenciesMismatched()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("EUR"));
+            
+            Assert.Throws<InvalidCurrencyException>(() =>
+            {
+                var result = money1 <= money2;
+            });
+        }
     }
 }
