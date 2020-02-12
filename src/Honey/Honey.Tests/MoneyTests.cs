@@ -79,7 +79,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void Compare_ReturnsMinusOne_WhenAmountIsLesser()
+        public void Compare_ReturnsMinusOne_WhenAmountIsLess()
         {
             var money1 = new Money(10m, new Currency("USD"));
             var money2 = new Money(11m, new Currency("USD"));
@@ -97,7 +97,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void Compare_ReturnsPlusOne_WhenAmountIsLesser()
+        public void Compare_ReturnsPlusOne_WhenAmountIsGreater()
         {
             var money1 = new Money(11m, new Currency("USD"));
             var money2 = new Money(10m, new Currency("USD"));
@@ -106,7 +106,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void BiggerOperator_ReturnsTrue_WhenAmountIsBigger()
+        public void GreaterThan_ReturnsTrue_WhenAmountIsGreater()
         {
             var money1 = new Money(11m, new Currency("USD"));
             var money2 = new Money(10m, new Currency("USD"));
@@ -115,7 +115,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void BiggerOperator_ReturnsFalse_WhenAmountIsTheSame()
+        public void GreaterThan_ReturnsFalse_WhenAmountIsTheSame()
         {
             var money1 = new Money(10m, new Currency("USD"));
             var money2 = new Money(10m, new Currency("USD"));
@@ -124,7 +124,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void BiggerOperator_ReturnsFalse_WhenAmountIsLesser()
+        public void GreaterThan_ReturnsFalse_WhenAmountIsLess()
         {
             var money1 = new Money(10m, new Currency("USD"));
             var money2 = new Money(11m, new Currency("USD"));
@@ -133,7 +133,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void LesserOperator_ReturnsTrue_WhenAmountIsLesser()
+        public void LessThan_ReturnsTrue_WhenAmountIsLess()
         {
             var money1 = new Money(10m, new Currency("USD"));
             var money2 = new Money(11m, new Currency("USD"));
@@ -142,7 +142,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void LesserOperator_ReturnsFalse_WhenAmountIsTheSame()
+        public void LessThan_ReturnsFalse_WhenAmountIsTheSame()
         {
             var money1 = new Money(10m, new Currency("USD"));
             var money2 = new Money(10m, new Currency("USD"));
@@ -151,7 +151,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void LesserOperator_ReturnsFalse_WhenAmountIsBigger()
+        public void LessThan_ReturnsFalse_WhenAmountIsGreater()
         {
             var money1 = new Money(11m, new Currency("USD"));
             var money2 = new Money(10m, new Currency("USD"));
@@ -160,7 +160,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void BiggerOperator_ThrowsException_WhenCurrenciesMismatched()
+        public void GreaterThan_ThrowsException_WhenCurrenciesMismatched()
         {
             var money1 = new Money(11m, new Currency("USD"));
             var money2 = new Money(10m, new Currency("EUR"));
@@ -172,7 +172,7 @@ namespace Honey.Tests
         }
         
         [Test]
-        public void LesserOperator_ThrowsException_WhenCurrenciesMismatched()
+        public void LessThan_ThrowsException_WhenCurrenciesMismatched()
         {
             var money1 = new Money(10m, new Currency("USD"));
             var money2 = new Money(11m, new Currency("EUR"));
