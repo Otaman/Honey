@@ -76,6 +76,12 @@ namespace Honey
             
             return new Money(m1.Amount - m2.Amount, m1.Currency);
         }
+        
+        public static Money operator +(Money money) => 
+            money;
+        
+        public static Money operator -(Money money) => 
+            new Money(-money.Amount, money.Currency);
 
         private static void CheckCurrencies(Currency expected, Currency actual)
         {

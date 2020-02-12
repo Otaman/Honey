@@ -318,5 +318,22 @@ namespace Honey.Tests
                 var result = money1 - money2;
             });
         }
+
+        [TestCaseSource(nameof(_amounts))]
+        public void UnaryPlus_ReturnsTheSameMoney(decimal amount)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            
+            Assert.AreEqual(money, +money);
+        }
+        
+        [TestCaseSource(nameof(_amounts))]
+        public void UnaryMinus_ReturnsMoneyWithNegatedAmount(decimal amount)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            var expected = new Money(-amount, new Currency("USD"));
+            
+            Assert.AreEqual(expected, -money);
+        }
     }
 }
