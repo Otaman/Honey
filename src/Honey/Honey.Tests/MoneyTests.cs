@@ -104,5 +104,83 @@ namespace Honey.Tests
             
             Assert.AreEqual(1, money1.CompareTo(money2));
         }
+        
+        [Test]
+        public void BiggerOperator_ReturnsTrue_WhenAmountIsBigger()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsTrue(money1 > money2);
+        }
+        
+        [Test]
+        public void BiggerOperator_ReturnsFalse_WhenAmountIsTheSame()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsFalse(money1 > money2);
+        }
+        
+        [Test]
+        public void BiggerOperator_ReturnsFalse_WhenAmountIsLesser()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("USD"));
+            
+            Assert.IsFalse(money1 > money2);
+        }
+        
+        [Test]
+        public void LesserOperator_ReturnsTrue_WhenAmountIsLesser()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("USD"));
+            
+            Assert.IsTrue(money1 < money2);
+        }
+        
+        [Test]
+        public void LesserOperator_ReturnsFalse_WhenAmountIsTheSame()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsFalse(money1 < money2);
+        }
+        
+        [Test]
+        public void LesserOperator_ReturnsFalse_WhenAmountIsBigger()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.IsFalse(money1 < money2);
+        }
+        
+        [Test]
+        public void BiggerOperator_ThrowsException_WhenCurrenciesMismatched()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("EUR"));
+
+            Assert.Throws<InvalidCurrencyException>(() =>
+            {
+                var result = money1 > money2;
+            });
+        }
+        
+        [Test]
+        public void LesserOperator_ThrowsException_WhenCurrenciesMismatched()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("EUR"));
+            
+            Assert.Throws<InvalidCurrencyException>(() =>
+            {
+                var result = money1 < money2;
+            });
+        }
     }
 }

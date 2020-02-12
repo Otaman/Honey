@@ -30,10 +30,29 @@ namespace Honey
 
         public int CompareTo(Money other)
         {
-            if (Currency != other.Currency)
-                throw new InvalidCurrencyException(Currency, other.Currency);
+            CheckCurrencies(Currency, other.Currency);
 
             return Amount.CompareTo(other.Amount);
+        }
+
+        public static bool operator >(Money m1, Money m2)
+        {
+            CheckCurrencies(m1.Currency, m2.Currency);
+
+            return m1.Amount > m2.Amount;
+        }
+        
+        public static bool operator <(Money m1, Money m2)
+        {
+            CheckCurrencies(m1.Currency, m2.Currency);
+            
+            return m1.Amount < m2.Amount;
+        }
+
+        private static void CheckCurrencies(Currency expected, Currency actual)
+        {
+            if (expected != actual)
+                throw new InvalidCurrencyException(expected, actual);
         }
     }
 }
