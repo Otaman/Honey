@@ -2,7 +2,7 @@ using System;
 
 namespace Honey
 {
-    public struct Money
+    public struct Money : IEquatable<Money>, IComparable<Money>
     {
         public decimal Amount { get; }
         public Currency Currency { get; }
@@ -27,5 +27,13 @@ namespace Honey
 
         public static bool operator !=(Money m1, Money m2) => 
             !m1.Equals(m2);
+
+        public int CompareTo(Money other)
+        {
+            if (Currency != other.Currency)
+                throw new InvalidCurrencyException(Currency, other.Currency);
+
+            return Amount.CompareTo(other.Amount);
+        }
     }
 }

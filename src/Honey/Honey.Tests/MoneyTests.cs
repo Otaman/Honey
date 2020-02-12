@@ -68,5 +68,41 @@ namespace Honey.Tests
             Assert.IsFalse(money2.Equals(money1));
             Assert.AreNotEqual(money1, money2);
         }
+
+        [Test]
+        public void Compare_ThrowsException_WhenCurrenciesMismatched()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("EUR"));
+            
+            Assert.Throws<InvalidCurrencyException>(() => money1.CompareTo(money2));
+        }
+        
+        [Test]
+        public void Compare_ReturnsMinusOne_WhenAmountIsLesser()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(11m, new Currency("USD"));
+            
+            Assert.AreEqual(-1, money1.CompareTo(money2));
+        }
+        
+        [Test]
+        public void Compare_ReturnsZero_WhenAmountIsTheSame()
+        {
+            var money1 = new Money(10m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.AreEqual(0, money1.CompareTo(money2));
+        }
+        
+        [Test]
+        public void Compare_ReturnsPlusOne_WhenAmountIsLesser()
+        {
+            var money1 = new Money(11m, new Currency("USD"));
+            var money2 = new Money(10m, new Currency("USD"));
+            
+            Assert.AreEqual(1, money1.CompareTo(money2));
+        }
     }
 }
