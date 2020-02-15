@@ -83,6 +83,12 @@ namespace Honey
         public static Money operator -(Money money) => 
             new Money(-money.Amount, money.Currency);
 
+        public static Money operator *(Money money, decimal multiplier) => 
+            new Money(money.Amount * multiplier, money.Currency);
+        
+        public static Money operator /(Money money, decimal divisor) => 
+            new Money(money.Amount / divisor, money.Currency);
+
         private static void CheckCurrencies(Currency expected, Currency actual)
         {
             if (expected != actual)

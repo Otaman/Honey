@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace Honey.Tests
@@ -334,6 +335,50 @@ namespace Honey.Tests
             var expected = new Money(-amount, new Currency("USD"));
             
             Assert.AreEqual(expected, -money);
+        }
+        
+        private static decimal[][] _multiplications = 
+        {
+            new [] {1m, 2m, 2m},
+            new [] {1m, 0m, 0m},
+            new [] {-1m, -2m, 2m},
+            new [] {-1m, 2m, -2m},
+            new [] {3.14m, 2m, 6.28m},
+            new [] {3.14m, 2.1m, 6.594m}
+        };
+        [TestCaseSource(nameof(_multiplications))]
+        public void Multiply_ReturnsMultipliedMoney(decimal amount, decimal multiplier, decimal result)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            var multipliedMoney = money * multiplier;
+            
+            Assert.AreEqual(result, multipliedMoney.Amount);
+        }
+        
+        private static decimal[][] _divisions = 
+        {
+            new [] {1m, 2m, 0.5m},
+            new [] {0m, 3m, 0m},
+            new [] {-1m, -2m, 0.5m},
+            new [] {-1m, 2m, -0.5m},
+            new [] {3.14m, 2m, 1.57m}
+        };
+        [TestCaseSource(nameof(_divisions))]
+        public void Division_ReturnsMultipliedMoney(decimal amount, decimal divisor, decimal result)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            var multipliedMoney = money / divisor;
+            
+            Assert.AreEqual(result, multipliedMoney.Amount);
+        }
+
+        [Test]
+        public void Division_ThrowsException_WhenDivisorIsZero()
+        {
+            Assert.Throws<DivideByZeroException>(() =>
+            {
+                var result = new Money(10m, new Currency("USD")) / 0;
+            });
         }
     }
 }
