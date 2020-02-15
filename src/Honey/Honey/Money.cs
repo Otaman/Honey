@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Honey
 {
@@ -94,5 +95,8 @@ namespace Honey
             if (expected != actual)
                 throw new InvalidCurrencyException(expected, actual);
         }
+
+        public override string ToString() => 
+            Currency + " " + Amount;
     }
 }

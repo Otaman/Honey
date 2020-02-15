@@ -380,5 +380,23 @@ namespace Honey.Tests
                 var result = new Money(10m, new Currency("USD")) / 0;
             });
         }
+
+        private static TestCaseData[] _toString =
+        {
+            new TestCaseData(5m, "USD", "USD 5"),
+            new TestCaseData(5.0m, "USD", "USD 5.0"),
+            new TestCaseData(3.14m, "USD", "USD 3.14"),
+            new TestCaseData(-3.14m, "USD", "USD -3.14"),
+            new TestCaseData(-0m, "USD", "USD 0"),
+            new TestCaseData(0m, "USD", "USD 0"),
+            new TestCaseData(10m, "$", "$ 10")
+        };
+        [TestCaseSource(nameof(_toString))]
+        public void ToString_Returns_CurrencyFirstThenAmount(decimal amount, string currency, string result)
+        {
+            var money = new Money(amount, new Currency(currency));
+            
+            Assert.AreEqual(result, money.ToString());
+        }
     }
 }
