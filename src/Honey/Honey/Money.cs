@@ -89,13 +89,40 @@ namespace Honey
         public static Money operator /(Money money, decimal divisor) => 
             new Money(money.Amount / divisor, money.Currency);
 
+        public override string ToString() => 
+            Currency + " " + Amount;
+
+        public Money RoundUp(int precision)
+        {
+            var scale =  (decimal) Math.Pow(10, precision);
+            var roundedAmount  = decimal.Ceiling(Amount * scale) / scale;
+
+            while (GetPrecision(roundedAmount) < precision) 
+                roundedAmount *= 1.0m;
+
+            return new Money(roundedAmount, Currency);
+        }
+        
+        public Money RoundDown(int precision)
+        {
+            var scale =  (decimal) Math.Pow(10, precision);
+            var roundedAmount  = decimal.Floor(Amount * scale) / scale;
+            
+            while (GetPrecision(roundedAmount) < precision) 
+                roundedAmount *= 1.0m;
+            
+            return new Money(roundedAmount, Currency);
+        }
+        
+        private static int GetPrecision(decimal value){
+            int[] bits = decimal.GetBits(value);
+            return (bits[3] >> 16) & 0x7F; 
+        }
+        
         private static void CheckCurrencies(Currency expected, Currency actual)
         {
             if (expected != actual)
                 throw new InvalidCurrencyException(expected, actual);
         }
-
-        public override string ToString() => 
-            Currency + " " + Amount;
     }
 }
