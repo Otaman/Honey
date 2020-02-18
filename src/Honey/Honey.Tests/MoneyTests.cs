@@ -398,5 +398,47 @@ namespace Honey.Tests
             
             Assert.AreEqual(result, money.ToString());
         }
+
+        private static TestCaseData[] _roundUp =
+        {
+            new TestCaseData(1m, 2, "1.00"),
+            new TestCaseData(1.0m, 2, "1.00"),
+            new TestCaseData(1.00m, 2, "1.00"),
+            new TestCaseData(1.000m, 2, "1.00"),
+            new TestCaseData(1.001m, 2, "1.01"),
+            new TestCaseData(1.009m, 2, "1.01"),
+            new TestCaseData(1.01m, 2, "1.01"),
+            new TestCaseData(1.09m, 2, "1.09"),
+            new TestCaseData(1.09m, 0, "2"),
+            new TestCaseData(1m, 28, "1.0000000000000000000000000000")
+        };
+        [TestCaseSource(nameof(_roundUp))]
+        public void RoundUp_ReturnsNewMoneyWithRoundedUpAmount(decimal amount, int precision, string result)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            
+            Assert.AreEqual(result, money.RoundUp(precision).Amount.ToString());
+        }
+        
+        private static TestCaseData[] _roundDown =
+        {
+            new TestCaseData(1m, 2, "1.00"),
+            new TestCaseData(1.0m, 2, "1.00"),
+            new TestCaseData(1.00m, 2, "1.00"),
+            new TestCaseData(1.000m, 2, "1.00"),
+            new TestCaseData(1.001m, 2, "1.00"),
+            new TestCaseData(1.009m, 2, "1.00"),
+            new TestCaseData(1.01m, 2, "1.01"),
+            new TestCaseData(1.09m, 2, "1.09"),
+            new TestCaseData(1.09m, 0, "1"),
+            new TestCaseData(1m, 28, "1.0000000000000000000000000000")
+        };
+        [TestCaseSource(nameof(_roundDown))]
+        public void RoundDown_ReturnsNewMoneyWithRoundedDownAmount(decimal amount, int precision, string result)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            
+            Assert.AreEqual(result, money.RoundDown(precision).Amount.ToString());
+        }
     }
 }
