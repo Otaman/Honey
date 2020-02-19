@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace Honey.Exchange.Tests
@@ -16,6 +17,39 @@ namespace Honey.Exchange.Tests
             
             Assert.AreEqual(pair, rate.Pair);
             Assert.AreEqual(1.08m, rate.Price);
+        }
+
+        [Test]
+        public void Constructor_ThrowsArgumentException_WhenPriceIsZero()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            
+            var ex = Assert.Throws<ArgumentException>(() => 
+            {
+                var rate = new ExchangeRate(pair, 0m);
+            });
+            Assert.AreEqual("Price cannot be zero for EUR/USD (Parameter 'price')", ex.Message);
+        }
+
+        [Test]
+        public void Exchange_ReturnsMoneyInQuoteCurrencyWithMultipliedAmount()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new ExchangeRate(pair, 1.08m);
+            var moneyToSell = new Money(10m, EUR);
+
+            Assert.AreEqual(USD, rate.Exchange(moneyToSell).Currency);
+            Assert.AreEqual(10.8m, rate.Exchange(moneyToSell).Amount);
+        }
+
+        [Test]
+        public void Exchange_ThrowsInvalidCurrencyException_WhenPassedCurrencyIsNotBaseCurrency()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new ExchangeRate(pair, 1.08m);
+            var moneyToSell = new Money(10m, USD);
+
+            Assert.Throws<InvalidCurrencyException>(() => rate.Exchange(moneyToSell));
         }
         
         [Test]
