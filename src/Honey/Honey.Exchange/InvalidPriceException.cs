@@ -16,5 +16,8 @@ namespace Honey.Exchange
 
         public static InvalidPriceException PriceCannotBeZero => 
             new InvalidPriceException("Price cannot be zero");
+
+        public static InvalidPriceException PriceCannotBeLessThanZero(decimal price) => 
+            new InvalidPriceException($"Price cannot be less than zero ({price})");
     }
 }

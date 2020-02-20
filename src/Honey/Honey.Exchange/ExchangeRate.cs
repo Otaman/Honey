@@ -11,6 +11,8 @@ namespace Honey.Exchange
         {
             if(price == 0)
                 throw InvalidPriceException.PriceCannotBeZero;
+            if(price < 0)
+                throw InvalidPriceException.PriceCannotBeLessThanZero(price);
 
             Pair = pair;
             Price = price;
@@ -72,6 +74,12 @@ namespace Honey.Exchange
             
             return r1.Price <= r2.Price;
         }
+
+        public static ExchangeRate operator *(ExchangeRate rate, decimal multiplier) => 
+            new ExchangeRate(rate.Pair, rate.Price * multiplier);
+        
+        public static ExchangeRate operator /(ExchangeRate rate, decimal divisor) => 
+            new ExchangeRate(rate.Pair, rate.Price / divisor);
 
         public override string ToString() => 
             Pair + " rate: " + Price;

@@ -32,6 +32,18 @@ namespace Honey.Exchange.Tests
         }
 
         [Test]
+        public void Constructor_ThrowsInvalidPriceException_WhenPriceIsLessThanZero()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            
+            var ex = Assert.Throws<InvalidPriceException>(() => 
+            {
+                var rate = new ExchangeRate(pair, -1m);
+            });
+            Assert.AreEqual("Price cannot be less than zero (-1)", ex.Message);
+        }
+
+        [Test]
         public void Exchange_ReturnsMoneyInQuoteCurrencyWithMultipliedAmount()
         {
             var pair = new CurrencyPair(EUR, USD);
@@ -289,6 +301,63 @@ namespace Honey.Exchange.Tests
             Assert.Throws<InvalidCurrencyPairException>(() =>
             {
                 var result = rate1 <= rate2;
+            });
+        }
+
+        private static decimal[][] _multiplications = 
+        {
+            new [] {1m, 2m, 2m},
+            new [] {3.14m, 2m, 6.28m},
+            new [] {3.14m, 2.1m, 6.594m}
+        };
+        [TestCaseSource(nameof(_multiplications))]
+        public void Multiply_ReturnsMultipliedRate(decimal price, decimal multiplier, decimal result)
+        {
+            var rate = new ExchangeRate(new CurrencyPair(USD, EUR), price);
+            var multipliedRate = rate * multiplier;
+            
+            Assert.AreEqual(result, multipliedRate.Price);
+        }
+
+        public void Multiply_ThrowsInvalidPriceException_WhenMultiplierIsNegative()
+        {
+            var rate = new ExchangeRate(new CurrencyPair(USD, EUR), 10m);
+
+            Assert.Throws<InvalidPriceException>(() =>
+            {                
+                var multipliedRate = rate * -1m;
+            });
+        }
+        
+        private static decimal[][] _divisions = 
+        {
+            new [] {1m, 2m, 0.5m},
+            new [] {3.14m, 2m, 1.57m}
+        };
+        [TestCaseSource(nameof(_divisions))]
+        public void Division_ReturnsDividedRate(decimal price, decimal divisor, decimal result)
+        {
+            var rate = new ExchangeRate(new CurrencyPair(USD, EUR), price);
+            var multipliedRate = rate / divisor;
+            
+            Assert.AreEqual(result, multipliedRate.Price);
+        }
+
+        [Test]
+        public void Division_ThrowsDivideByZeroException_WhenDivisorIsZero()
+        {
+            Assert.Throws<DivideByZeroException>(() =>
+            {
+                var result = new ExchangeRate(new CurrencyPair(USD, EUR), 10m) / 0;
+            });
+        }
+
+        [Test]
+        public void Division_ThrowsDivideByZeroException_WhenDivisorIsNegative()
+        {
+            Assert.Throws<InvalidPriceException>(() =>
+            {
+                var result = new ExchangeRate(new CurrencyPair(USD, EUR), 10m) / -1m;
             });
         }
     }
