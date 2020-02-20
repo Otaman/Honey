@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honey", "Honey\Honey.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honey.Tests", "Honey.Tests\Honey.Tests.csproj", "{1158F13D-C66B-48AF-BDE2-C2096EA14BB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honey.Exchange.Tests", "Honey.Exchange.Tests\Honey.Exchange.Tests.csproj", "{A60373D4-0BB4-4745-AD05-5A6A26082B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honey.Exchange", "Honey.Exchange\Honey.Exchange.csproj", "{448F40C7-F9C3-4712-9651-3943E74DED4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{1158F13D-C66B-48AF-BDE2-C2096EA14BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1158F13D-C66B-48AF-BDE2-C2096EA14BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1158F13D-C66B-48AF-BDE2-C2096EA14BB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A60373D4-0BB4-4745-AD05-5A6A26082B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A60373D4-0BB4-4745-AD05-5A6A26082B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A60373D4-0BB4-4745-AD05-5A6A26082B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A60373D4-0BB4-4745-AD05-5A6A26082B62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{448F40C7-F9C3-4712-9651-3943E74DED4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{448F40C7-F9C3-4712-9651-3943E74DED4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{448F40C7-F9C3-4712-9651-3943E74DED4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{448F40C7-F9C3-4712-9651-3943E74DED4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

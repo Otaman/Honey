@@ -364,12 +364,12 @@ namespace Honey.Tests
             new [] {3.14m, 2m, 1.57m}
         };
         [TestCaseSource(nameof(_divisions))]
-        public void Division_ReturnsMultipliedMoney(decimal amount, decimal divisor, decimal result)
+        public void Division_ReturnsDividedMoney(decimal amount, decimal divisor, decimal result)
         {
             var money = new Money(amount, new Currency("USD"));
-            var multipliedMoney = money / divisor;
+            var dividedMoney = money / divisor;
             
-            Assert.AreEqual(result, multipliedMoney.Amount);
+            Assert.AreEqual(result, dividedMoney.Amount);
         }
 
         [Test]
