@@ -10,7 +10,7 @@ namespace Honey.Exchange
         public ExchangeRate(CurrencyPair pair, decimal price)
         {
             if(price == 0)
-                throw new ArgumentException($"Price cannot be zero for {pair}", nameof(price));
+                throw InvalidPriceException.PriceCannotBeZero;
 
             Pair = pair;
             Price = price;

@@ -20,15 +20,15 @@ namespace Honey.Exchange.Tests
         }
 
         [Test]
-        public void Constructor_ThrowsArgumentException_WhenPriceIsZero()
+        public void Constructor_ThrowsInvalidPriceException_WhenPriceIsZero()
         {
             var pair = new CurrencyPair(EUR, USD);
             
-            var ex = Assert.Throws<ArgumentException>(() => 
+            var ex = Assert.Throws<InvalidPriceException>(() => 
             {
                 var rate = new ExchangeRate(pair, 0m);
             });
-            Assert.AreEqual("Price cannot be zero for EUR/USD (Parameter 'price')", ex.Message);
+            Assert.AreEqual("Price cannot be zero", ex.Message);
         }
 
         [Test]
