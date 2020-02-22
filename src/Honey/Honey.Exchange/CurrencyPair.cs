@@ -13,6 +13,9 @@ namespace Honey.Exchange
             QuoteCurrency = quoteCurrency;
         }
 
+        public CurrencyPair Swap() =>
+            new CurrencyPair(QuoteCurrency, BaseCurrency);
+
         public bool Equals(CurrencyPair other) => 
             BaseCurrency.Equals(other.BaseCurrency) && QuoteCurrency.Equals(other.QuoteCurrency);
 

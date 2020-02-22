@@ -14,6 +14,23 @@ namespace Honey.Exchange
             this.Pair = pair;
             this.Bid = bid;
             this.Ask = ask;
-        }        
+        }
+
+        public ExchangeRate GetDirectExchangeRate() => 
+            new ExchangeRate(Pair, Bid);
+
+        public ExchangeRate GetRevercedExchangeRate() =>
+            new ExchangeRate(new CurrencyPair(Pair.QuoteCurrency, Pair.BaseCurrency), 1m / Ask);
+        
+        public Money Exchange(Money moneyToSell)
+        {
+            if(Pair.BaseCurrency == moneyToSell.Currency)
+                return GetDirectExchangeRate().Exchange(moneyToSell);
+
+            if(Pair.QuoteCurrency == moneyToSell.Currency)
+                return GetRevercedExchangeRate().Exchange(moneyToSell);
+
+            throw new InvalidCurrencyException(Pair.BaseCurrency, moneyToSell.Currency);
+        }
     }
 }

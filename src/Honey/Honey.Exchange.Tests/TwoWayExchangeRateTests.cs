@@ -36,5 +36,65 @@ namespace Honey.Exchange.Tests
             Assert.Throws<InvalidPriceException>(() => new TwoWayExchangeRate(pair, -1m, 0.9m));
             Assert.Throws<InvalidPriceException>(() => new TwoWayExchangeRate(pair, 1.1m, -1m));
         }
+
+        [Test]
+        public void GetDirectExchangeRate_ReturnsExchangeRateWithBidPrice()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+
+            var directRate = rate.GetDirectExchangeRate();
+
+            Assert.AreEqual(pair, directRate.Pair);
+            Assert.AreEqual(0.9m, directRate.Price);
+        }
+
+        [Test]
+        public void GetRevercedExchangeRate_ReturnsExchangeRateWithBidPrice()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+
+            var revercedRate = rate.GetRevercedExchangeRate();
+
+            Assert.AreEqual(new CurrencyPair(USD, EUR), revercedRate.Pair);
+            Assert.AreEqual(1 / 1.1m, revercedRate.Price);
+        }
+
+        [Test]
+        public void Exchange_ReturnsExchangedMoneyUsingBidPrice_WhenCurrencyEqualsBase()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+            var moneyToSell = new Money(10m, EUR);
+
+            var boughtMoney = rate.Exchange(moneyToSell);
+
+            Assert.AreEqual(USD, boughtMoney.Currency);
+            Assert.AreEqual(9m, boughtMoney.Amount);
+        }
+
+        [Test]
+        public void Exchange_ReturnsExchangedMoneyUsingOneDividedByAskPrice_WhenCurrencyEqualsQuote()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+            var moneyToSell = new Money(10m, USD);
+
+            var boughtMoney = rate.Exchange(moneyToSell);
+
+            Assert.AreEqual(EUR, boughtMoney.Currency);
+            Assert.AreEqual(10m/1.1m, boughtMoney.Amount);
+        }
+
+        [Test]
+        public void Exchange_ThrowsInvalidCurrencyException_WhenCurrencyNotEqualsToBaseOrQuote()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+            var moneyToSell = new Money(10m, GBP);
+
+            Assert.Throws<InvalidCurrencyException>(() => rate.Exchange(moneyToSell));
+        }
     }
 }
