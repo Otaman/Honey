@@ -96,5 +96,18 @@ namespace Honey.Exchange.Tests
 
             Assert.Throws<InvalidCurrencyException>(() => rate.Exchange(moneyToSell));
         }
+
+        [Test]
+        public void Invert_CreatesInvertedTwoWayExchangeRate()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+
+            var inverted = rate.Invert();
+
+            Assert.AreEqual(new CurrencyPair(USD, EUR), inverted.Pair);
+            Assert.AreEqual(1m/1.1m, inverted.Bid);
+            Assert.AreEqual(1m/0.9m, inverted.Ask);
+        }
     }
 }

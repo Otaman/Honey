@@ -32,5 +32,8 @@ namespace Honey.Exchange
 
             throw new InvalidCurrencyException(Pair.BaseCurrency, moneyToSell.Currency);
         }
+
+        public TwoWayExchangeRate Invert() => 
+            new TwoWayExchangeRate(Pair.Swap(), 1m / Ask, 1m / Bid);
     }
 }
