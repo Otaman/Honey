@@ -47,5 +47,14 @@ namespace Honey.Exchange.Tests
             
             Assert.AreEqual("EUR/USD", pair.ToString());
         }
+
+        [Test]
+        public void Swap_ReturnsReverceCurrencyPair()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var expected = new CurrencyPair(USD, EUR);
+            
+            Assert.AreEqual(expected, pair.Swap());
+        }
     }
 }
