@@ -109,5 +109,14 @@ namespace Honey.Exchange.Tests
             Assert.AreEqual(1m/1.1m, inverted.Bid);
             Assert.AreEqual(1m/0.9m, inverted.Ask);
         }
+
+        [Test]
+        public void ToString_ReturnsPairFirstThenBidSlashAsk()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+
+            Assert.AreEqual("EUR/USD rate: 0.9/1.1", rate.ToString());
+        }
     }
 }

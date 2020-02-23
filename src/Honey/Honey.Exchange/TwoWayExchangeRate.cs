@@ -35,5 +35,8 @@ namespace Honey.Exchange
 
         public TwoWayExchangeRate Invert() => 
             new TwoWayExchangeRate(Pair.Swap(), 1m / Ask, 1m / Bid);
+
+        public override string ToString() => 
+            $"{Pair} rate: {Bid}/{Ask}";
     }
 }
