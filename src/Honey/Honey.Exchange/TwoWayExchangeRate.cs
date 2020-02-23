@@ -22,17 +22,19 @@ namespace Honey.Exchange
             new ExchangeRate(Pair, Bid);
 
         public ExchangeRate GetInvertedExchangeRate() =>
-            new ExchangeRate(new CurrencyPair(Pair.QuoteCurrency, Pair.BaseCurrency), 1m / Ask);
+            new ExchangeRate(Pair.Swap(), 1m / Ask);
         
         public Money Exchange(Money moneyToSell)
         {
-            if(Pair.BaseCurrency == moneyToSell.Currency)
+            var sellCurrency = moneyToSell.Currency;
+
+            if (Pair.BaseCurrency == sellCurrency)
                 return GetDirectExchangeRate().Exchange(moneyToSell);
 
-            if(Pair.QuoteCurrency == moneyToSell.Currency)
+            if(Pair.QuoteCurrency == sellCurrency)
                 return GetInvertedExchangeRate().Exchange(moneyToSell);
 
-            throw new InvalidCurrencyException(Pair.BaseCurrency, moneyToSell.Currency);
+            throw new InvalidCurrencyException(Pair.BaseCurrency, sellCurrency);
         }
 
         public TwoWayExchangeRate Invert() => 
@@ -42,7 +44,7 @@ namespace Honey.Exchange
             $"{Pair} rate: {Bid}/{Ask}";
 
         public bool Equals(TwoWayExchangeRate other) => 
-            Pair.Equals(other.Pair) && Bid == other.Bid && Ask == other.Ask;
+            Pair == other.Pair && Bid == other.Bid && Ask == other.Ask;
 
         public override bool Equals(object obj) => 
             obj is TwoWayExchangeRate other && Equals(other);
