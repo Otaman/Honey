@@ -55,7 +55,7 @@ namespace Honey.Exchange.Tests
             var pair = new CurrencyPair(EUR, USD);
             var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
 
-            var revercedRate = rate.GetRevercedExchangeRate();
+            var revercedRate = rate.GetInvertedExchangeRate();
 
             Assert.AreEqual(new CurrencyPair(USD, EUR), revercedRate.Pair);
             Assert.AreEqual(1 / 1.1m, revercedRate.Price);
@@ -117,6 +117,54 @@ namespace Honey.Exchange.Tests
             var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
 
             Assert.AreEqual("EUR/USD rate: 0.9/1.1", rate.ToString());
+        }
+        
+        [Test]
+        public void Equals_ReturnsTrue_WhenCurrencyPairAndBidAndAskAreTheSame()
+        {
+            var rate1 = new TwoWayExchangeRate(new CurrencyPair(USD, EUR), 0.8m, 0.9m);
+            var rate2 = new TwoWayExchangeRate(new CurrencyPair(USD, EUR), 0.8m, 0.9m);
+            
+            Assert.IsTrue(rate1 == rate2);
+            Assert.IsTrue(rate1.Equals(rate2));
+            Assert.IsTrue(rate2.Equals(rate1));
+            Assert.AreEqual(rate1, rate2);
+        }
+        
+        [Test]
+        public void Equals_ReturnsFalse_WhenCurrencyPairAndBidAreTheSameButAskIsDifferent()
+        {
+            var rate1 = new TwoWayExchangeRate(new CurrencyPair(USD, EUR), 0.8m, 0.9m);
+            var rate2 = new TwoWayExchangeRate(new CurrencyPair(USD, EUR), 0.8m, 0.91m);
+            
+            Assert.IsTrue(rate1 != rate2);
+            Assert.IsFalse(rate1.Equals(rate2));
+            Assert.IsFalse(rate2.Equals(rate1));
+            Assert.AreNotEqual(rate1, rate2);
+        }
+        
+        [Test]
+        public void Equals_ReturnsFalse_WhenCurrencyPairAndAskAreTheSameButBidIsDifferent()
+        {
+            var rate1 = new TwoWayExchangeRate(new CurrencyPair(USD, EUR), 0.8m, 0.9m);
+            var rate2 = new TwoWayExchangeRate(new CurrencyPair(USD, EUR), 0.81m, 0.9m);
+            
+            Assert.IsTrue(rate1 != rate2);
+            Assert.IsFalse(rate1.Equals(rate2));
+            Assert.IsFalse(rate2.Equals(rate1));
+            Assert.AreNotEqual(rate1, rate2);
+        }
+        
+        [Test]
+        public void Equals_ReturnsFalse_WhenBidAndAskAreTheSameButCurrencyPairIsDifferent()
+        {
+            var rate1 = new TwoWayExchangeRate(new CurrencyPair(USD, EUR), 0.8m, 0.9m);
+            var rate2 = new TwoWayExchangeRate(new CurrencyPair(GBP, EUR), 0.8m, 0.9m);
+            
+            Assert.IsTrue(rate1 != rate2);
+            Assert.IsFalse(rate1.Equals(rate2));
+            Assert.IsFalse(rate2.Equals(rate1));
+            Assert.AreNotEqual(rate1, rate2);
         }
     }
 }

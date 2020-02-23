@@ -1,6 +1,8 @@
+using System;
+
 namespace Honey.Exchange
 {
-    public struct TwoWayExchangeRate
+    public struct TwoWayExchangeRate : IEquatable<TwoWayExchangeRate>
     {
         public CurrencyPair Pair { get; }
         public decimal Bid { get; }
@@ -11,15 +13,15 @@ namespace Honey.Exchange
             if(bid == 0 || ask == 0) throw InvalidPriceException.PriceCannotBeZero;
             if(bid < 0 || ask < 0) throw InvalidPriceException.PriceCannotBeLessThanZero(bid);
 
-            this.Pair = pair;
-            this.Bid = bid;
-            this.Ask = ask;
+            Pair = pair;
+            Bid = bid;
+            Ask = ask;
         }
 
         public ExchangeRate GetDirectExchangeRate() => 
             new ExchangeRate(Pair, Bid);
 
-        public ExchangeRate GetRevercedExchangeRate() =>
+        public ExchangeRate GetInvertedExchangeRate() =>
             new ExchangeRate(new CurrencyPair(Pair.QuoteCurrency, Pair.BaseCurrency), 1m / Ask);
         
         public Money Exchange(Money moneyToSell)
@@ -28,7 +30,7 @@ namespace Honey.Exchange
                 return GetDirectExchangeRate().Exchange(moneyToSell);
 
             if(Pair.QuoteCurrency == moneyToSell.Currency)
-                return GetRevercedExchangeRate().Exchange(moneyToSell);
+                return GetInvertedExchangeRate().Exchange(moneyToSell);
 
             throw new InvalidCurrencyException(Pair.BaseCurrency, moneyToSell.Currency);
         }
@@ -38,5 +40,20 @@ namespace Honey.Exchange
 
         public override string ToString() => 
             $"{Pair} rate: {Bid}/{Ask}";
+
+        public bool Equals(TwoWayExchangeRate other) => 
+            Pair.Equals(other.Pair) && Bid == other.Bid && Ask == other.Ask;
+
+        public override bool Equals(object obj) => 
+            obj is TwoWayExchangeRate other && Equals(other);
+
+        public override int GetHashCode() => 
+            HashCode.Combine(Pair, Bid, Ask);
+
+        public static bool operator ==(TwoWayExchangeRate r1, TwoWayExchangeRate r2) =>
+            r1.Equals(r2);
+        
+        public static bool operator !=(TwoWayExchangeRate r1, TwoWayExchangeRate r2) =>
+            !r1.Equals(r2);
     }
 }
