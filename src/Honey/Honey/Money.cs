@@ -1,7 +1,11 @@
 using System;
+using System.Globalization;
 
 namespace Honey
 {
+    /// <summary>
+    /// Represents an amount defined in a specific currency.
+    /// </summary>
     public struct Money : IEquatable<Money>, IComparable<Money>
     {
         public decimal Amount { get; }
@@ -89,9 +93,23 @@ namespace Honey
         public static Money operator /(Money money, decimal divisor) => 
             new Money(money.Amount / divisor, money.Currency);
 
+        /// <summary>
+        /// Returns the currency and the amount separated with a space
+        /// </summary>
+        /// <example>
+        /// USD 12.34
+        /// </example>
         public override string ToString() => 
-            Currency + " " + Amount;
+            Currency + " " + Amount.ToString(CultureInfo.InvariantCulture);
 
+        /// <summary>
+        /// Returns money with the smallest amount in specified precision
+        /// that is greater than or equal to the current amount.
+        /// </summary>
+        /// <param name="precision">The number of digits to the right after the decimal point</param>
+        /// <example>
+        /// (USD 12.3412).RoundUp(2) = (USD 12.35)
+        /// </example>
         public Money RoundUp(int precision)
         {
             var scale =  (decimal) Math.Pow(10, precision);
@@ -103,6 +121,14 @@ namespace Honey
             return new Money(roundedAmount, Currency);
         }
         
+        /// <summary>
+        /// Returns money with current amount
+        /// which decimal part greater than the specified precision was discarded.
+        /// </summary>
+        /// <param name="precision">The number of digits to the right after the decimal point</param>
+        /// <example>
+        /// (USD 12.3468).RoundDown(2) = (USD 12.34)
+        /// </example>
         public Money RoundDown(int precision)
         {
             var scale =  (decimal) Math.Pow(10, precision);
