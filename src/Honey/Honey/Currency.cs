@@ -2,10 +2,17 @@ using System;
 
 namespace Honey
 {
+    /// <summary>
+    /// Represents a specific currency unit
+    /// </summary>
+    /// <example>
+    /// USD, $, US Dollar
+    /// </example>
     public struct Currency : IEquatable<Currency>
     {
         private string Value { get; }
 
+        /// <exception cref="ArgumentException">Currency cannot be null or whitespace</exception>
         public Currency(string currencyCode)
         {
             if (string.IsNullOrWhiteSpace(currencyCode))

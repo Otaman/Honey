@@ -1,12 +1,21 @@
 using System;
+using System.Globalization;
 
 namespace Honey.Exchange
 {
+    /// <summary>
+    /// Provides price of the base currency in the quote currency.
+    /// </summary>
+    /// <example>
+    /// For example, the exchange rate for the EUR/USD pair is 1.08.
+    /// It means that one euro costs 1.08 US dollars (one dollar and 8 cents).
+    /// </example>
     public struct ExchangeRate : IEquatable<ExchangeRate>, IComparable<ExchangeRate>
     {
         public CurrencyPair Pair { get; }
         public decimal Price { get; }
 
+        /// <exception cref="InvalidPriceException">Price cannot be negative or zero.</exception>
         public ExchangeRate(CurrencyPair pair, decimal price)
         {
             if(price == 0)
@@ -18,6 +27,18 @@ namespace Honey.Exchange
             Price = price;
         }
 
+        /// <summary>
+        /// Exchange operation means sell money in the base currency and buy money in the quote currency.
+        /// </summary>
+        /// <param name="moneyToSell">Money to exchange in the base currency.</param>
+        /// <returns>Money in the quote currency.</returns>
+        /// <exception cref="InvalidCurrencyException">
+        /// The currency of money to sell must be the same as the base currency.
+        /// </exception>
+        /// <example>
+        /// For example, the exchange rate for the EUR/USD pair is 1.08.
+        /// Then exchanging 10 euros you will get 10 dollars and 8 cents.
+        /// </example>
         public Money Exchange(Money moneyToSell)
         {
             CheckCurrencies(Pair.BaseCurrency, moneyToSell.Currency);
@@ -81,8 +102,15 @@ namespace Honey.Exchange
         public static ExchangeRate operator /(ExchangeRate rate, decimal divisor) => 
             new ExchangeRate(rate.Pair, rate.Price / divisor);
 
+        /// <summary>
+        /// Returns rate in format "Pair rate: Price" in the invariant culture
+        /// </summary>
+        /// <example>
+        /// For example, the exchange rate for the EUR/USD pair is 1.08.
+        /// Then result will be "EUR/USD rate: 1.08"
+        /// </example>
         public override string ToString() => 
-            Pair + " rate: " + Price;
+            Pair + " rate: " + Price.ToString(CultureInfo.InvariantCulture);
 
         private static void CheckCurrencyPairs(CurrencyPair expected, CurrencyPair actual)
         {
