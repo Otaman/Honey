@@ -16,3 +16,15 @@ euros -= coffeePrice; // EUR 16
 var twoCups = coffeePrice * 2; // EUR 8
 var hasEnoughMoney = euros >= twoCups; // true
 ```
+
+### Exchange operations examples
+```C#
+var USD = new Currency("USD");
+var EUR = new Currency("EUR");
+
+var EurUsd = new CurrencyPair(EUR, USD);
+var rate = new ExchangeRate(EurUsd, 1.1m); // EUR/USD rate: 1.1
+
+var euros = 50m.In(EUR);
+var dollars = rate.Exchange(euros); // 55 USD  
+```
