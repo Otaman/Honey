@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace Honey.Tests
@@ -417,7 +418,7 @@ namespace Honey.Tests
         {
             var money = new Money(amount, new Currency("USD"));
             
-            Assert.AreEqual(result, money.RoundUp(precision).Amount.ToString());
+            Assert.AreEqual(result, money.RoundUp(precision).Amount.ToString(CultureInfo.InvariantCulture));
         }
         
         private static TestCaseData[] _roundDown =
@@ -438,7 +439,7 @@ namespace Honey.Tests
         {
             var money = new Money(amount, new Currency("USD"));
             
-            Assert.AreEqual(result, money.RoundDown(precision).Amount.ToString());
+            Assert.AreEqual(result, money.RoundDown(precision).Amount.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
