@@ -46,6 +46,25 @@ namespace Honey.Exchange
             return new Money(moneyToSell.Amount * Price, Pair.QuoteCurrency);
         }
 
+        /// <summary>
+        /// Calculates required money in base currency to get provided money in quote currency after exchange
+        /// </summary>
+        /// <param name="moneyToBuy">Money that will be bought during an exchange</param>
+        /// <returns>Required money to sell to get requested money in result of exchange</returns>
+        /// <exception cref="InvalidCurrencyException">
+        /// The currency of provided money must be the same as the quote currency.
+        /// </exception>
+        /// <example>
+        /// For example, the exchange rate for the EUR/USD pair is 1.08.
+        /// Then to get 10 dollars you need to sell 9.26 euros.
+        /// </example>
+        public Money CalculateMoneyToSell(Money moneyToBuy)
+        {
+            CheckCurrencies(Pair.QuoteCurrency, moneyToBuy.Currency);
+            
+            return new Money(moneyToBuy.Amount / Price, Pair.BaseCurrency);
+        }
+
         public bool Equals(ExchangeRate other) => 
             Pair.Equals(other.Pair) && Price == other.Price;
 
