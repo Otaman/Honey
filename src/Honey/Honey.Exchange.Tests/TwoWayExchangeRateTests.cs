@@ -96,6 +96,57 @@ namespace Honey.Exchange.Tests
 
             Assert.Throws<InvalidCurrencyException>(() => rate.Exchange(moneyToSell));
         }
+        
+        [Test]
+        public void GetMoneyToExchange_ReturnsMoneyToExchangeCalculatedUsingBidPrice_WhenCurrencyEqualsBase()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+            var boughtMoney = new Money(10m, USD);
+
+            var moneyToSell = rate.GetMoneyToExchange(boughtMoney);
+
+            Assert.AreEqual(EUR, moneyToSell.Currency);
+            Assert.AreEqual(10/0.9m, moneyToSell.Amount);
+        }
+
+        [Test]
+        public void GetMoneyToExchange_ReturnsExchangedMoneyUsingOneDividedByAskPrice_WhenCurrencyEqualsQuote()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+            var boughtMoney = new Money(10m, EUR);
+
+            var moneyToSell = rate.GetMoneyToExchange(boughtMoney);
+
+            Assert.AreEqual(USD, moneyToSell.Currency);
+            Assert.AreEqual(11m, moneyToSell.Amount);
+        }
+
+        [Test]
+        public void GetMoneyToExchange_ThrowsInvalidCurrencyException_WhenCurrencyNotEqualsToBaseOrQuote()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+            var boughtMoney = new Money(10m, GBP);
+
+            Assert.Throws<InvalidCurrencyException>(() => rate.GetMoneyToExchange(boughtMoney));
+        }
+        
+        [Test]
+        public void GetMoneyToExchange_And_Exchange_AreOppositeOperations()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new TwoWayExchangeRate(pair, 0.9m, 1.1m);
+            var dollars = new Money(10m, USD);
+            var euros = new Money(10m, EUR);
+
+            var boughtEuros = rate.Exchange(dollars);
+            var boughtDollars = rate.Exchange(euros);
+            
+            Assert.AreEqual(dollars, rate.GetMoneyToExchange(boughtEuros));
+            Assert.AreEqual(euros, rate.GetMoneyToExchange(boughtDollars));
+        }
 
         [Test]
         public void Invert_CreatesInvertedTwoWayExchangeRate()

@@ -65,6 +65,39 @@ namespace Honey.Exchange.Tests
         }
         
         [Test]
+        public void GetMoneyToExchange_ReturnsMoneyInBaseCurrencyWithDividedAmount()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new ExchangeRate(pair, 1.08m);
+            var exchangeResult = new Money(5.4m, USD);
+
+            Assert.AreEqual(EUR, rate.GetMoneyToExchange(exchangeResult).Currency);
+            Assert.AreEqual(5m, rate.GetMoneyToExchange(exchangeResult).Amount);
+        }
+
+        [Test]
+        public void GetMoneyToExchange_ThrowsInvalidCurrencyException_WhenPassedCurrencyIsNotQuoteCurrency()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new ExchangeRate(pair, 1.08m);
+            var exchangeResult = new Money(5m, EUR);
+
+            Assert.Throws<InvalidCurrencyException>(() => rate.GetMoneyToExchange(exchangeResult));
+        }
+
+        [Test]
+        public void GetMoneyToExchange_And_Exchange_AreOppositeOperations()
+        {
+            var pair = new CurrencyPair(EUR, USD);
+            var rate = new ExchangeRate(pair, 1.08m);
+            var moneyToSell = new Money(5m, EUR);
+            
+            var exchangeResult = rate.Exchange(moneyToSell);
+            
+            Assert.AreEqual(moneyToSell, rate.GetMoneyToExchange(exchangeResult));
+        }
+        
+        [Test]
         public void Equals_ReturnsTrue_WhenCurrencyPairAndPriceAreTheSame()
         {
             var rate1 = new ExchangeRate(new CurrencyPair(USD, EUR), 10m);
