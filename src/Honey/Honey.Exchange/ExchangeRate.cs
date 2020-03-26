@@ -58,7 +58,7 @@ namespace Honey.Exchange
         /// For example, the exchange rate for the EUR/USD pair is 1.08.
         /// Then to get 10 dollars you need to sell 9.26 euros.
         /// </example>
-        public Money CalculateMoneyToSell(Money moneyToBuy)
+        public Money GetMoneyToExchange(Money moneyToBuy)
         {
             CheckCurrencies(Pair.QuoteCurrency, moneyToBuy.Currency);
             

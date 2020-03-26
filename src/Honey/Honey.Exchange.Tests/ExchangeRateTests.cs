@@ -65,28 +65,28 @@ namespace Honey.Exchange.Tests
         }
         
         [Test]
-        public void CalculateMoneyToSell_ReturnsMoneyInBaseCurrencyWithDividedAmount()
+        public void GetMoneyToExchange_ReturnsMoneyInBaseCurrencyWithDividedAmount()
         {
             var pair = new CurrencyPair(EUR, USD);
             var rate = new ExchangeRate(pair, 1.08m);
             var exchangeResult = new Money(5.4m, USD);
 
-            Assert.AreEqual(EUR, rate.CalculateMoneyToSell(exchangeResult).Currency);
-            Assert.AreEqual(5m, rate.CalculateMoneyToSell(exchangeResult).Amount);
+            Assert.AreEqual(EUR, rate.GetMoneyToExchange(exchangeResult).Currency);
+            Assert.AreEqual(5m, rate.GetMoneyToExchange(exchangeResult).Amount);
         }
 
         [Test]
-        public void CalculateMoneyToSell_ThrowsInvalidCurrencyException_WhenPassedCurrencyIsNotQuoteCurrency()
+        public void GetMoneyToExchange_ThrowsInvalidCurrencyException_WhenPassedCurrencyIsNotQuoteCurrency()
         {
             var pair = new CurrencyPair(EUR, USD);
             var rate = new ExchangeRate(pair, 1.08m);
             var exchangeResult = new Money(5m, EUR);
 
-            Assert.Throws<InvalidCurrencyException>(() => rate.CalculateMoneyToSell(exchangeResult));
+            Assert.Throws<InvalidCurrencyException>(() => rate.GetMoneyToExchange(exchangeResult));
         }
 
         [Test]
-        public void CalculateMoneyToSell_And_Exchange_AreOppositeOperations()
+        public void GetMoneyToExchange_And_Exchange_AreOppositeOperations()
         {
             var pair = new CurrencyPair(EUR, USD);
             var rate = new ExchangeRate(pair, 1.08m);
@@ -94,7 +94,7 @@ namespace Honey.Exchange.Tests
             
             var exchangeResult = rate.Exchange(moneyToSell);
             
-            Assert.AreEqual(moneyToSell, rate.CalculateMoneyToSell(exchangeResult));
+            Assert.AreEqual(moneyToSell, rate.GetMoneyToExchange(exchangeResult));
         }
         
         [Test]

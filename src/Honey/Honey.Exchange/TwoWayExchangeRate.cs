@@ -82,6 +82,42 @@ namespace Honey.Exchange
 
             throw new InvalidCurrencyException(Pair.BaseCurrency, sellCurrency);
         }
+        
+        /// <summary>
+        /// <para>
+        /// Calculation depends on money to buy currency.
+        /// </para>
+        /// <para>
+        /// When money's currency is base currency then calculation means
+        /// get required money in quote currency to get provided money after exchange using ask price.
+        /// </para>
+        /// <para>
+        /// When money's currency is quote currency then calculation means
+        /// get required money in base currency to get provided money after exchange using bid price.
+        /// </para>
+        /// </summary>
+        /// <param name="moneyToBuy">Money that will be got during an exchange</param>
+        /// <returns>Required money to spend to get requested money in result of exchange</returns>
+        /// <exception cref="InvalidCurrencyException">
+        /// The currency of provided money must be the same as the base currency or the quote currency.
+        /// </exception>
+        /// <example>
+        /// For example, the exchange rate for the EUR/USD pair is 1.07/1.09.
+        /// To get one US dollar you need 1/1.07 = 0.93 euros
+        /// To get one euro you need 1*1.09 = 1.09 US dollars
+        /// </example>
+        public Money GetMoneyToExchange(Money moneyToBuy)
+        {
+            var buyCurrency = moneyToBuy.Currency;
+
+            if (Pair.QuoteCurrency == buyCurrency)
+                return GetDirectExchangeRate().GetMoneyToExchange(moneyToBuy);
+
+            if(Pair.BaseCurrency == buyCurrency)
+                return GetInvertedExchangeRate().GetMoneyToExchange(moneyToBuy); 
+            
+            throw new InvalidCurrencyException(Pair.QuoteCurrency, buyCurrency);
+        }
 
         /// <summary>
         /// Provides prices for the opposite currency pair
