@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Honey.Tests
@@ -440,6 +441,36 @@ namespace Honey.Tests
             var money = new Money(amount, new Currency("USD"));
             
             Assert.AreEqual(result, money.RoundDown(precision).Amount.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static TestCaseData[] _parseValid = _amounts
+            .SelectMany(a => _currencies.Select(c => new Money(a, new Currency(c))))
+            .Select(x => new TestCaseData(x, x.ToString()))
+            .ToArray();
+        [TestCaseSource(nameof(_parseValid))]
+        public void Parse_ReturnsMoneyFromValidString(Money money, string s)
+        {
+            Assert.AreEqual(money, Money.Parse(s));
+        }
+
+        private static string[] _parseInvalid =
+        {
+            "USD0",
+            "1 USD",
+            "USD",
+            "USD ",
+            "123"
+        };
+        [TestCaseSource(nameof(_parseInvalid))]
+        public void Parse_ThrowsFormatException_WhenStringIsNotValid(string s)
+        {
+            Assert.Throws<FormatException>(() => Money.Parse(s));
+        }
+
+        [Test]
+        public void Parse_ThrowsArgumentNullException_WhenStringIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => Money.Parse(null));
         }
     }
 }

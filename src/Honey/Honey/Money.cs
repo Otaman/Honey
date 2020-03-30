@@ -139,6 +139,27 @@ namespace Honey
             
             return new Money(roundedAmount, Currency);
         }
+
+        public static Money Parse(string s)
+        {
+            if (s == null) throw new ArgumentNullException(nameof(s));
+            
+            var spacePosition = s.IndexOf(' ');
+            if(spacePosition == -1)
+                throw new FormatException("Input string was not in a correct format.");
+            
+            var currencyCode = s.Substring(0, spacePosition);
+            var amount = s.Substring(spacePosition + 1);
+
+            try
+            {
+                return new Money(decimal.Parse(amount, CultureInfo.InvariantCulture), new Currency(currencyCode));
+            }
+            catch (Exception e) when(!(e is FormatException))
+            {
+                throw new FormatException("Input string was not in a correct format.", e);
+            }
+        }
         
         private static int GetPrecision(decimal value){
             int[] bits = decimal.GetBits(value);
