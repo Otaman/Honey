@@ -48,5 +48,26 @@ namespace Honey.Exchange
         /// </summary>
         public override string ToString() => 
             BaseCurrency + "/" + QuoteCurrency;
+
+        public static CurrencyPair Parse(string s)
+        {
+            if (s == null) throw new ArgumentNullException(nameof(s));
+            
+            var slashPosition = s.IndexOf('/');
+            if(slashPosition == -1)
+                throw new FormatException("Input string was not in a correct format.");
+            
+            var baseCurrencyCode = s.Substring(0, slashPosition);
+            var quoteCurrencyCode = s.Substring(slashPosition + 1);
+
+            try
+            {
+                return new CurrencyPair(new Currency(baseCurrencyCode), new Currency(quoteCurrencyCode));
+            }
+            catch (Exception e) when(!(e is FormatException))
+            {
+                throw new FormatException("Input string was not in a correct format.", e);
+            }
+        }
     }
 }
