@@ -150,5 +150,39 @@ namespace Honey.Exchange
         
         public static bool operator !=(TwoWayExchangeRate r1, TwoWayExchangeRate r2) =>
             !r1.Equals(r2);
+        
+        public static TwoWayExchangeRate Parse(string s)
+        {
+            if (s == null) throw new ArgumentNullException(nameof(s));
+
+            const string delimiter = " rate: ";
+            var delimiterPosition = s.IndexOf(delimiter, StringComparison.Ordinal);
+            if(delimiterPosition == -1)
+                throw new FormatException("Input string was not in a correct format.");
+            
+            var currencyPairPart = s.Substring(0, delimiterPosition);
+            var pricePart = s.Substring(delimiterPosition + delimiter.Length);
+
+            const char priceDelimiter = '/';
+            var priceDelimiterPosition = pricePart.IndexOf(priceDelimiter, StringComparison.Ordinal);
+            if(priceDelimiterPosition == -1)
+                throw new FormatException("Input string was not in a correct format.");
+
+            var bidPart = pricePart.Substring(0, priceDelimiterPosition);
+            var askPart = pricePart.Substring(priceDelimiterPosition + 1);
+
+            try
+            {
+                var currencyPair = CurrencyPair.Parse(currencyPairPart);
+                var bid = decimal.Parse(bidPart, CultureInfo.InvariantCulture);
+                var ask = decimal.Parse(askPart, CultureInfo.InvariantCulture);
+                
+                return new TwoWayExchangeRate(currencyPair, bid, ask);
+            }
+            catch (Exception e) when(!(e is FormatException))
+            {
+                throw new FormatException("Input string was not in a correct format.", e);
+            }
+        }
     }
 }
