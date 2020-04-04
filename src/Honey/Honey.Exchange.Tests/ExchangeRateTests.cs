@@ -1,13 +1,14 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Honey.Exchange.Tests
 {
     public class ExchangeRateTests
     {
-        readonly Currency EUR = new Currency("EUR");
-        readonly Currency USD = new Currency("USD");
-        readonly Currency GBP = new Currency("GBP");
+        static readonly Currency EUR = new Currency("EUR");
+        static readonly Currency USD = new Currency("USD");
+        static readonly Currency GBP = new Currency("GBP");
         
         [Test]
         public void Constructor_CreatesExchangeRate()
@@ -352,6 +353,7 @@ namespace Honey.Exchange.Tests
             Assert.AreEqual(result, multipliedRate.Price);
         }
 
+        [Test]
         public void Multiply_ThrowsInvalidPriceException_WhenMultiplierIsNegative()
         {
             var rate = new ExchangeRate(new CurrencyPair(USD, EUR), 10m);
@@ -392,6 +394,39 @@ namespace Honey.Exchange.Tests
             {
                 var result = new ExchangeRate(new CurrencyPair(USD, EUR), 10m) / -1m;
             });
+        }
+
+        private static TestCaseData[] _parseValid = new[]
+        {
+            new ExchangeRate(new CurrencyPair(EUR, USD), 1.08m),
+            new ExchangeRate(new CurrencyPair(EUR, USD), 1m),
+            new ExchangeRate(new CurrencyPair(EUR, GBP), 0.8m)
+        }.Select(x => new TestCaseData(x, x.ToString())).ToArray();
+        [TestCaseSource(nameof(_parseValid))]
+        public void Parse_ReturnsExchangeRateFromValidString(ExchangeRate rate, string s)
+        {
+            Assert.AreEqual(rate, ExchangeRate.Parse(s));
+        }
+
+        private static string[] _parseInvalid =
+        {
+            "",
+            "USD/GBP",
+            "USD/GBP 1.08",
+            "USD/GBP rate: ",
+            "USD rate: 1",
+            "123"
+        };
+        [TestCaseSource(nameof(_parseInvalid))]
+        public void Parse_ThrowsFormatException_WhenStringIsNotValid(string s)
+        {
+            Assert.Throws<FormatException>(() => ExchangeRate.Parse(s));
+        }
+
+        [Test]
+        public void Parse_ThrowsArgumentNullException_WhenStringIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => ExchangeRate.Parse(null));
         }
     }
 }
