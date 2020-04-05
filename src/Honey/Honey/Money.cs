@@ -120,7 +120,14 @@ namespace Honey
 
             return new Money(roundedAmount, Currency);
         }
-        
+
+        /// <summary>
+        /// Returns money with the smallest amount in specified precision
+        /// that is greater than or equal to the current amount.
+        /// </summary>
+        public Money RoundUp(IPrecisionProvider provider) => 
+            RoundUp(provider.GetPrecision(Currency));
+
         /// <summary>
         /// Returns money with current amount
         /// which decimal part greater than the specified precision was discarded.
@@ -139,6 +146,13 @@ namespace Honey
             
             return new Money(roundedAmount, Currency);
         }
+        
+        /// <summary>
+        /// Returns money with current amount
+        /// which decimal part greater than the specified precision was discarded.
+        /// </summary>
+        public Money RoundDown(IPrecisionProvider provider) => 
+            RoundDown(provider.GetPrecision(Currency));
 
         public static Money Parse(string s)
         {
