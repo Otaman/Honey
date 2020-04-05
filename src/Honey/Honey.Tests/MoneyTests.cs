@@ -422,6 +422,15 @@ namespace Honey.Tests
             Assert.AreEqual(result, money.RoundUp(precision).Amount.ToString(CultureInfo.InvariantCulture));
         }
         
+        [TestCaseSource(nameof(_roundUp))]
+        public void RoundUpWithPrecisionProvider_ReturnsNewMoneyWithRoundedUpAmount(decimal amount, int precision, string result)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            var provider = new PrecisionProvider(currency => precision);
+            
+            Assert.AreEqual(result, money.RoundUp(provider).Amount.ToString(CultureInfo.InvariantCulture));
+        }
+        
         private static TestCaseData[] _roundDown =
         {
             new TestCaseData(1m, 2, "1.00"),
@@ -441,6 +450,15 @@ namespace Honey.Tests
             var money = new Money(amount, new Currency("USD"));
             
             Assert.AreEqual(result, money.RoundDown(precision).Amount.ToString(CultureInfo.InvariantCulture));
+        }
+        
+        [TestCaseSource(nameof(_roundDown))]
+        public void RoundDownWithPrecisionProvider_ReturnsNewMoneyWithRoundedDownAmount(decimal amount, int precision, string result)
+        {
+            var money = new Money(amount, new Currency("USD"));
+            var provider = new PrecisionProvider(currency => precision);
+            
+            Assert.AreEqual(result, money.RoundDown(provider).Amount.ToString(CultureInfo.InvariantCulture));
         }
 
         private static TestCaseData[] _parseValid = _amounts
