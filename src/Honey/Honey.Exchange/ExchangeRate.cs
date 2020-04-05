@@ -130,6 +130,31 @@ namespace Honey.Exchange
         /// </example>
         public override string ToString() => 
             Pair + " rate: " + Price.ToString(CultureInfo.InvariantCulture);
+        
+        public static ExchangeRate Parse(string s)
+        {
+            if (s == null) throw new ArgumentNullException(nameof(s));
+
+            const string delimiter = " rate: ";
+            var delimiterPosition = s.IndexOf(delimiter, StringComparison.Ordinal);
+            if(delimiterPosition == -1)
+                throw new FormatException("Input string was not in a correct format.");
+            
+            var currencyPairPart = s.Substring(0, delimiterPosition);
+            var pricePart = s.Substring(delimiterPosition + delimiter.Length);
+
+            try
+            {
+                var currencyPair = CurrencyPair.Parse(currencyPairPart);
+                var price = decimal.Parse(pricePart, CultureInfo.InvariantCulture);
+                
+                return new ExchangeRate(currencyPair, price);
+            }
+            catch (Exception e) when(!(e is FormatException))
+            {
+                throw new FormatException("Input string was not in a correct format.", e);
+            }
+        }
 
         private static void CheckCurrencyPairs(CurrencyPair expected, CurrencyPair actual)
         {

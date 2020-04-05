@@ -45,5 +45,33 @@ namespace Honey.Tests
             
             Assert.AreEqual(currencyCode, currency.ToString());
         }
+
+        private static TestCaseData[] _parseValid =
+        {
+            new TestCaseData(new Currency("USD"), "USD"),
+            new TestCaseData(new Currency("$"), "$")
+        };
+        [TestCaseSource(nameof(_parseValid))]
+        public void Parse_ReturnsCurrencyFromValidString(Currency currency, string s)
+        {
+            Assert.AreEqual(currency, Currency.Parse(s));
+        }
+
+        private static string[] _parseInvalid =
+        {
+            " ",
+            "    "
+        };
+        [TestCaseSource(nameof(_parseInvalid))]
+        public void Parse_ThrowsFormatException_WhenStringIsNotValid(string s)
+        {
+            Assert.Throws<FormatException>(() => Currency.Parse(s));
+        }
+
+        [Test]
+        public void Parse_ThrowsArgumentNullException_WhenStringIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => Currency.Parse(null));
+        }
     }
 }

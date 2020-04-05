@@ -38,5 +38,19 @@ namespace Honey
 
         public override string ToString() => 
             Value;
+
+        public static Currency Parse(string s)
+        {
+            if (s == null) throw new ArgumentNullException(nameof(s));
+            
+            try
+            {
+                return new Currency(s);
+            }
+            catch (Exception e) when(!(e is FormatException))
+            {
+                throw new FormatException("Input string was not in a correct format.", e);
+            }
+        }
     }
 }

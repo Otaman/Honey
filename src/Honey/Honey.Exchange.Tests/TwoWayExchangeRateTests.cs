@@ -1,12 +1,14 @@
+using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Honey.Exchange.Tests
 {
     public class TwoWayExchangeRateTests
     {
-        readonly Currency EUR = new Currency("EUR");
-        readonly Currency USD = new Currency("USD");
-        readonly Currency GBP = new Currency("GBP");
+        static readonly Currency EUR = new Currency("EUR");
+        static readonly Currency USD = new Currency("USD");
+        static readonly Currency GBP = new Currency("GBP");
 
         [Test]
         public void Constructor_CreatesRateWithCorrectProperties()
@@ -216,6 +218,42 @@ namespace Honey.Exchange.Tests
             Assert.IsFalse(rate1.Equals(rate2));
             Assert.IsFalse(rate2.Equals(rate1));
             Assert.AreNotEqual(rate1, rate2);
+        }
+        
+        private static TestCaseData[] _parseValid = new[]
+        {
+            new TwoWayExchangeRate(new CurrencyPair(EUR, USD), 1.08m, 1.1m),
+            new TwoWayExchangeRate(new CurrencyPair(EUR, USD), 0.9m, 1m),
+            new TwoWayExchangeRate(new CurrencyPair(EUR, GBP), 0.5m, 0.6m)
+        }.Select(x => new TestCaseData(x, x.ToString())).ToArray();
+        [TestCaseSource(nameof(_parseValid))]
+        public void Parse_ReturnsTwoWayExchangeRateFromValidString(TwoWayExchangeRate rate, string s)
+        {
+            Assert.AreEqual(rate, TwoWayExchangeRate.Parse(s));
+        }
+
+        private static string[] _parseInvalid =
+        {
+            "",
+            "USD/GBP",
+            "USD/GBP 1.08",
+            "USD/GBP rate: ",
+            "USD rate: 1",
+            "USD/GBP rate: 1.09",
+            "USD/EUR rate: 1.09/",
+            "USD/EUR rate: /1.08",
+            "123"
+        };
+        [TestCaseSource(nameof(_parseInvalid))]
+        public void Parse_ThrowsFormatException_WhenStringIsNotValid(string s)
+        {
+            Assert.Throws<FormatException>(() => TwoWayExchangeRate.Parse(s));
+        }
+
+        [Test]
+        public void Parse_ThrowsArgumentNullException_WhenStringIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => TwoWayExchangeRate.Parse(null));
         }
     }
 }

@@ -1,11 +1,12 @@
+using System;
 using NUnit.Framework;
 
 namespace Honey.Exchange.Tests
 {
     public class CurrencyPairTests
     {
-        readonly Currency EUR = new Currency("EUR");
-        readonly Currency USD = new Currency("USD");
+        static readonly Currency EUR = new Currency("EUR");
+        static readonly Currency USD = new Currency("USD");
         
         [Test]
         public void Constructor_CreatesPairFromBaseAndQuoteCurrencies()
@@ -49,12 +50,44 @@ namespace Honey.Exchange.Tests
         }
 
         [Test]
-        public void Swap_ReturnsReverceCurrencyPair()
+        public void Swap_ReturnsReverseCurrencyPair()
         {
             var pair = new CurrencyPair(EUR, USD);
             var expected = new CurrencyPair(USD, EUR);
             
             Assert.AreEqual(expected, pair.Swap());
+        }
+
+        private static TestCaseData[] _parseValid =
+        {
+            new TestCaseData(new CurrencyPair(EUR, USD), "EUR/USD"),
+            new TestCaseData(new CurrencyPair(USD, EUR), "USD/EUR")
+        };
+        [TestCaseSource(nameof(_parseValid))]
+        public void Parse_ReturnsCurrencyPairFromValidString(CurrencyPair pair, string s)
+        {
+            Assert.AreEqual(pair, CurrencyPair.Parse(s));
+        }
+
+        private static string[] _parseInvalid =
+        {
+            "USD/",
+            "/USD",
+            "USD",
+            "USD ",
+            "USD-EUR",
+            "USD,EUR"
+        };
+        [TestCaseSource(nameof(_parseInvalid))]
+        public void Parse_ThrowsFormatException_WhenStringIsNotValid(string s)
+        {
+            Assert.Throws<FormatException>(() => CurrencyPair.Parse(s));
+        }
+
+        [Test]
+        public void Parse_ThrowsArgumentNullException_WhenStringIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => CurrencyPair.Parse(null));
         }
     }
 }
