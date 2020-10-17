@@ -2,6 +2,22 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
+        <Authors>Serhii Buta</Authors>
+        <Description>Provides money type and operations for .NET</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/Otaman/Honey</PackageProjectUrl>
+        <Version>1.0.0-beta</Version>
+        <PackageIcon>icon.png</PackageIcon>
+        <Copyright></Copyright>
+        <RepositoryUrl>https://github.com/Otaman/Honey</RepositoryUrl>
+        <PackageTags>Money;Exchange</PackageTags>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\..\..\icon.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+    </ItemGroup>
 
 </Project>
